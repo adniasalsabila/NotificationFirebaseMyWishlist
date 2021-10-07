@@ -1,21 +1,27 @@
 package com.gits.mywishlist.rest
 
+import com.gits.mywishlist.utils.Constants
 import com.gits.mywishlist.utils.Constants.Companion.BASE_URL
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class RetrofitClient {
-
-    companion object {
-        private val retrofit by lazy {
-            Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+    companion object{
+        fun getApi(): Api {
+            val loggingInterceptor =
+                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            val client = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
                 .build()
-        }
-
-        val api by lazy {
-            retrofit.create(Api::class.java)
+            val retrofit = Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build()
+                    return retrofit.create(Api::class.java)
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.gits.mywishlist.firebase.FirebaseService
 import com.gits.mywishlist.firebase.PushNotification
 import com.gits.mywishlist.model.DataMessage
@@ -15,6 +16,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 const val TOPIC = "/topics/myTopic2"
 
@@ -45,18 +49,27 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        val refreshToken = FirebaseInstanceId.getInstance().token
+        Log.d(TAG, "Refresh token $refreshToken")
     }
 
-    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = RetrofitClient.api.postNotification(notification)
-            if(response.isSuccessful) {
-                Log.d(TAG, "Response: ${Gson().toJson(response)}")
-            } else {
-                Log.e(TAG, response.errorBody().toString())
+
+
+    private fun sendNotification(it: PushNotification) {
+        val response = RetrofitClient.getApi().postNotification(it.data.title,it.data.message)
+        response.enqueue(object : Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful){
+                    Toast.makeText(this@MainActivity,"Success Notification",Toast.LENGTH_LONG).show()
+                }
             }
-        } catch(e: Exception) {
-            Log.e(TAG, e.toString())
-        }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+
+            }
+
+        })
+
     }
 }
