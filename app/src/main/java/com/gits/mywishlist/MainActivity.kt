@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.gits.mywishlist.firebase.FirebaseService
+import com.gits.mywishlist.firebase.PushNotification
+import com.gits.mywishlist.model.DataMessage
+import com.gits.mywishlist.rest.RetrofitClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             val recipientToken = etToken.text.toString()
             if(title.isNotEmpty() && message.isNotEmpty() && recipientToken.isNotEmpty()) {
                 PushNotification(
-                        NotificationData(title, message),
+                        DataMessage(title, message),
                         recipientToken
                 ).also {
                     sendNotification(it)
@@ -45,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = RetrofitInstance.api.postNotification(notification)
+            val response = RetrofitClient.api.postNotification(notification)
             if(response.isSuccessful) {
                 Log.d(TAG, "Response: ${Gson().toJson(response)}")
             } else {

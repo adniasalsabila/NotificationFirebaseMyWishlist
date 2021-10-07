@@ -1,10 +1,10 @@
-package com.gits.mywishlist
+package com.gits.mywishlist.rest
 
-import com.gits.mywishlist.Constants.Companion.BASE_URL
+import com.gits.mywishlist.utils.Constants.Companion.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitInstance {
+class RetrofitClient {
 
     companion object {
         private val retrofit by lazy {
@@ -15,7 +15,7 @@ class RetrofitInstance {
         }
 
         val api by lazy {
-            retrofit.create(NotificationAPI::class.java)
+            retrofit.create(Api::class.java)
         }
     }
 }

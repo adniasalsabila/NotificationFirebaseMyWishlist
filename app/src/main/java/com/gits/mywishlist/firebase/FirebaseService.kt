@@ -1,4 +1,4 @@
-package com.gits.mywishlist
+package com.gits.mywishlist.firebase
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,6 +12,8 @@ import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.gits.mywishlist.MainActivity
+import com.gits.mywishlist.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -73,14 +75,3 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
